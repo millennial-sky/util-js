@@ -9,12 +9,12 @@ export const pick = (obj, ...keys) => {
 export const todo = (msg) => { throw new Error("TODO" + (msg ? `: ${msg}` : "")) }
 
 export const match = (obj, cases) => {
-  const kind = obj.kind
-  if (cases[kind] === undefined) {
-    if (cases["_"] !== undefined) return cases["_"](obj)
-    throw new Error(`No case for ${kind}`)
+  let fn = cases[obj.kind]
+  if (fn === undefined) {
+    fn = cases["_"]
+    if (fn === undefined) throw new Error(`Unhandled kind: ${obj.kind}`)
   }
-  return cases[kind](obj)
+  return fn(obj)
 }
 
 export const isString = (s) => Object.prototype.toString.call(s) === "[object String]"
